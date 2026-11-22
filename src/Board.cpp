@@ -26,6 +26,28 @@ void Board::DrawASCII() const {
     std::puts(horizontalBorder.c_str());
 }
 
+void Board::Draw(SDL_Renderer *renderer) const {
+    const float cellSize = 640.0 / size;
+
+    SDL_SetRenderDrawColor(renderer, 18, 23, 32, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_SetRenderDrawColor(renderer, 91, 219, 145, 255);
+    for (int row = 0; row < size; ++row) {
+        for (int col = 0; col < size; ++col) {
+            if (board[row][col]) {
+                const SDL_FRect cell {
+                    col * cellSize, row * cellSize,
+                    cellSize - 1.0f, cellSize - 1.0f
+                };
+                SDL_RenderFillRect(renderer, &cell);
+            }
+        }
+    }
+    
+    SDL_RenderPresent(renderer);
+}
+
 void Board::GenerateRandom() {
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
 

@@ -30,6 +30,9 @@ add_executable(GameOfLife
     src/Board.cpp
 )
 
+add_subdirectory(SDL EXCLUDE_FROM_ALL)
+target_link_libraries(GameOfLife PRIVATE SDL3::SDL3)
+
 target_include_directories(GameOfLife
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -40,6 +43,8 @@ add_executable(StructureTests
     src/GameOfLife.cpp
     src/Board.cpp
 )
+
+target_link_libraries(StructureTests PRIVATE SDL3::SDL3)
 
 target_include_directories(StructureTests
     PRIVATE
