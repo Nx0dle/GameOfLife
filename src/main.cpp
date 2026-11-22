@@ -41,8 +41,10 @@ int main(int argc, char* argv[]) {
     game.gameBoard.GenerateRandom();
     game.gameBoard.Draw(renderer);
 
-    std::atomic<Uint32> interwalMs{1000};
-    const SDL_TimerID timer = SDL_AddTimer(1000, QueueCellStep, &interwalMs);
+    bool gamepaused = false;
+    
+    std::atomic<Uint32> intervalMs{1000};
+    const SDL_TimerID timer = SDL_AddTimer(1000, QueueCellStep, &intervalMs);
     if (timer == 0) {
         std::fprintf(stderr, "SDL_AddTimer: %s\n", SDL_GetError());
     }
@@ -61,16 +63,20 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        if (event.type == 1) {
+        if (event.type == 1 && !gamepaused) {
             game.CellStep();
             game.gameBoard.Draw(renderer);
         }
 
         if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) {
-            if (event.key.key == SDLK_UP && interwalMs.load() > 100) {
-                interwalMs.fetch_sub(100);
+            if (event.key.key == SDLK_UP && intervalMs.load() > 100) {
+                if (gamepaused) continue;
+                intervalMs.fetch_sub(100);
             } else if (event.key.key == SDLK_DOWN) {
-                interwalMs.fetch_add(100);
+                if (gamepaused) continue;
+                intervalMs.fetch_add(100);
+            } else if (event.key.key == SDLK_SPACE) {
+                gamepaused = !gamepaused;
             }
         }
     }
