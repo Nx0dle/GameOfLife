@@ -1,6 +1,20 @@
+#include <cstdio>
+#include <atomic>
+
+#include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
 #include "GameOfLife.hpp"
+
+static Uint32 SDLCALL QueueCellStep(void* userdata, SDL_TimerID, Uint32 interval) {
+    SDL_Event event{};
+    event.type = 1;
+    SDL_PushEvent(&event);
+
+    auto* actualInterval = static_cast<std::atomic<Uint32>*>(userdata);
+
+    return actualInterval->load();
+}
 
 int main(int argc, char* argv[]) {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -27,6 +41,12 @@ int main(int argc, char* argv[]) {
     game.gameBoard.GenerateRandom();
     game.gameBoard.Draw(renderer);
 
+    std::atomic<Uint32> interwalMs{1000};
+    const SDL_TimerID timer = SDL_AddTimer(1000, QueueCellStep, &interwalMs);
+    if (timer == 0) {
+        std::fprintf(stderr, "SDL_AddTimer: %s\n", SDL_GetError());
+    }
+
     SDL_Event event;
     int result = 0;
 
@@ -41,13 +61,25 @@ int main(int argc, char* argv[]) {
             break;
         }
 
-        if (event.type == SDL_EVENT_KEY_DOWN &&
-            event.key.key == SDLK_SPACE && !event.key.repeat) {
+        if (event.type == 1) {
             game.CellStep();
             game.gameBoard.Draw(renderer);
         }
+
+        if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) {
+            if (event.key.key == SDLK_UP && interwalMs.load() > 100) {
+                interwalMs.fetch_sub(100);
+            } else if (event.key.key == SDLK_DOWN) {
+                interwalMs.fetch_add(100);
+            }
+        }
     }
 
+    if (timer != 0) {
+        SDL_RemoveTimer(timer);
+    }
+
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
     return result;
