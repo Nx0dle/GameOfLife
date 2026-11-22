@@ -51,12 +51,4 @@ int main(int argc, char* argv[]) {
     SDL_DestroyWindow(window);
     SDL_Quit();
     return result;
-
-    // GameOfLife game = GameOfLife(10);
-
-    // game.gameBoard.GenerateRandom();
-    // game.gameBoard.DrawASCII();
-
-    // game.CellStep();
-    // game.gameBoard.DrawASCII();
 }
