@@ -18,48 +18,70 @@ int main() {
 }
 
 bool testBlinker() {
-    const GameBoard start = {
+    GameOfLife game = GameOfLife(3);
+    game.gameBoard.board = {
         {0, 1, 0},
         {0, 1, 0},
         {0, 1, 0},
     };
 
-    const auto afterTwoSteps = cellStep(cellStep(start));
+    const std::vector<std::vector<bool>> expected = {
+        {0, 1, 0},
+        {0, 1, 0},
+        {0, 1, 0},
+    };
 
-    return afterTwoSteps == start;
+    game.CellStep();
+    game.CellStep();
+
+    return game.gameBoard.board == expected;
 }
 
 bool testBlock() {
-    const GameBoard start = {
+    GameOfLife game = GameOfLife(4);
+    game.gameBoard.board = {
         {0, 0, 0, 0},
         {0, 1, 1, 0},
         {0, 1, 1, 0},
         {0, 0, 0, 0},
     };
 
-    return cellStep(start) == start;
+    const std::vector<std::vector<bool>> expected = {
+        {0, 0, 0, 0},
+        {0, 1, 1, 0},
+        {0, 1, 1, 0},
+        {0, 0, 0, 0},
+    };
+
+    game.CellStep();
+
+    return game.gameBoard.board == expected;
 }
 
 bool testGlider() {
-    const GameBoard start = {{0, 1, 0, 0, 0, 0, 0, 0},
-                                   {0, 0, 1, 0, 0, 0, 0, 0},
-                                   {1, 1, 1, 0, 0, 0, 0, 0},
-                                   {0, 0, 0, 0, 0, 0, 0, 0},
-                                   {0, 0, 0, 0, 0, 0, 0, 0},
-                                   {0, 0, 0, 0, 0, 0, 0, 0},
-                                   {0, 0, 0, 0, 0, 0, 0, 0},
-                                   {0, 0, 0, 0, 0, 0, 0, 0}};
+    GameOfLife game = GameOfLife(8);
+    game.gameBoard.board = {{0, 1, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 1, 0, 0, 0, 0, 0},
+                            {1, 1, 1, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 0}};
 
-    const GameBoard expected = {{0, 0, 0, 0, 0, 0, 0, 0},
-                                      {0, 0, 1, 0, 0, 0, 0, 0},
-                                      {0, 0, 0, 1, 0, 0, 0, 0},
-                                      {0, 1, 1, 1, 0, 0, 0, 0},
-                                      {0, 0, 0, 0, 0, 0, 0, 0},
-                                      {0, 0, 0, 0, 0, 0, 0, 0},
-                                      {0, 0, 0, 0, 0, 0, 0, 0},
-                                      {0, 0, 0, 0, 0, 0, 0, 0}};
+    const std::vector<std::vector<bool>> expected = {{0, 0, 0, 0, 0, 0, 0, 0},
+                                                     {0, 0, 1, 0, 0, 0, 0, 0},
+                                                     {0, 0, 0, 1, 0, 0, 0, 0},
+                                                     {0, 1, 1, 1, 0, 0, 0, 0},
+                                                     {0, 0, 0, 0, 0, 0, 0, 0},
+                                                     {0, 0, 0, 0, 0, 0, 0, 0},
+                                                     {0, 0, 0, 0, 0, 0, 0, 0},
+                                                     {0, 0, 0, 0, 0, 0, 0, 0}};
 
-    const auto afterFourSteps = cellStep(cellStep(cellStep(cellStep(start))));
+    game.CellStep();
+    game.CellStep();
+    game.CellStep();
+    game.CellStep();
 
-    return afterFourSteps == expected;
+    return game.gameBoard.board == expected;
 }

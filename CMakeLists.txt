@@ -27,6 +27,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(GameOfLife
     src/main.cpp
     src/GameOfLife.cpp
+    src/Board.cpp
 )
 
 target_include_directories(GameOfLife
@@ -37,6 +38,7 @@ target_include_directories(GameOfLife
 add_executable(StructureTests
     tests/StructureTests.cpp
     src/GameOfLife.cpp
+    src/Board.cpp
 )
 
 target_include_directories(StructureTests

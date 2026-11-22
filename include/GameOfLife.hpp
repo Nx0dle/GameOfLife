@@ -1,15 +1,14 @@
 #include <vector>
 
-typedef std::vector<std::vector<bool>> GameBoard;
+#include "Board.hpp"
 
-typedef struct {
-    int x;
-    int y;
-} Point;
+class GameOfLife {
+    public:
+        Board gameBoard;
 
-void drawBoard(const GameBoard &board);
-GameBoard generateRandomBoard(const int size);
-int countNeighbours(Point point, GameBoard &board);
-bool isBorder(Point point, int boardSize);
-GameBoard cellStep(GameBoard board);
-bool aliveOrDead(bool cell, int neighbourCount);
+        GameOfLife(int boardSize);
+
+        int CountNeighbours(Point point);
+        void CellStep();
+        bool AliveOrDead(bool cell, int neighbourCount);
+};

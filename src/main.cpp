@@ -1,21 +1,10 @@
 #include "GameOfLife.hpp"
 
 int main() {
-    const int boardSize = 10;
-    GameBoard testBoard = {{0, 1, 0, 0, 0, 0, 0, 0},
-                           {0, 0, 1, 0, 0, 0, 0, 0},
-                           {1, 1, 1, 0, 0, 0, 0, 0},
-                           {0, 0, 0, 0, 0, 0, 0, 0},
-                           {0, 0, 0, 0, 0, 0, 0, 0},
-                           {0, 0, 0, 0, 0, 0, 0, 0},
-                           {0, 0, 0, 0, 0, 0, 0, 0},
-                           {0, 0, 0, 0, 0, 0, 0, 0}};
-    GameBoard board = generateRandomBoard(boardSize);
+    GameOfLife game(10);
+    game.gameBoard.GenerateRandom();
+    game.gameBoard.DrawASCII();
 
-    drawBoard(testBoard);
-
-    for (int i = 0; i < 4; i++) {
-        testBoard = cellStep(testBoard);
-        drawBoard(testBoard);
-    }
+    game.CellStep();
+    game.gameBoard.DrawASCII();
 }
