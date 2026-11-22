@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
+enable_testing()
+
 if(NOT DEFINED CMAKE_CXX_COMPILER AND "$ENV{CXX}" STREQUAL ""
     AND NOT DEFINED CMAKE_TOOLCHAIN_FILE AND "$ENV{CMAKE_TOOLCHAIN_FILE}" STREQUAL "")
     if(CMAKE_HOST_APPLE)
@@ -24,9 +26,22 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(GameOfLife
     src/main.cpp
+    src/GameOfLife.cpp
 )
 
 target_include_directories(GameOfLife
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+add_executable(StructureTests
+    tests/StructureTests.cpp
+    src/GameOfLife.cpp
+)
+
+target_include_directories(StructureTests
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
+add_test(NAME StructureTests COMMAND StructureTests)
